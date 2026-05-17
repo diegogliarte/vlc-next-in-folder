@@ -1,22 +1,20 @@
 # VLC Next In Folder
 
-A tiny VLC script that makes VLC continue with the next files in the same folder.
+Tiny VLC Lua script that queues the rest of the files in the same folder.
 
 ## Problem
 
-You double-click one episode:
+You double-click:
 
 ```txt
 Episode 03.mkv
 ```
 
-VLC plays only that file.
+VLC only plays that file.
 
-## What this does
+## What it does
 
-It adds the rest of the folder to the VLC playlist automatically.
-
-Example folder:
+Given:
 
 ```txt
 Episode 01.mkv
@@ -26,13 +24,7 @@ Episode 04.mkv
 Episode 05.mkv
 ```
 
-Open:
-
-```txt
-Episode 03.mkv
-```
-
-Playlist becomes:
+Opening `Episode 03.mkv` makes the playlist:
 
 ```txt
 Episode 03.mkv
@@ -44,24 +36,38 @@ Episode 02.mkv
 
 ## Setup
 
-Copy `next_in_folder.lua` to:
+This is a VLC Lua **interface script**.
+
+Copy `next_in_folder.lua` to VLC's `lua/intf` folder.
+
+Common paths might be:
 
 ```txt
-C:\Users\<YOUR_USER>\AppData\Roaming\vlc\lua\intf\next_in_folder.lua
+Windows:       C:\Users\<YOU>\AppData\Roaming\vlc\lua\intf\next_in_folder.lua
+Linux:         ~/.local/share/vlc/lua/intf/next_in_folder.lua
+Linux Flatpak: ~/.var/app/org.videolan.VLC/data/vlc/lua/intf/next_in_folder.lua
+macOS:         ~/Library/Application Support/org.videolan.vlc/lua/intf/next_in_folder.lua
 ```
 
-Open VLC config:
+Then edit VLC's config file.
+
+Common config paths might be:
 
 ```txt
-C:\Users\<YOUR_USER>\AppData\Roaming\vlc\vlcrc
+Windows:       C:\Users\<YOU>\AppData\Roaming\vlc\vlcrc
+Linux:         ~/.config/vlc/vlcrc
+Linux Flatpak: ~/.var/app/org.videolan.VLC/config/vlc/vlcrc
+macOS:         ~/Library/Preferences/org.videolan.vlc/vlcrc
 ```
 
-Add or change these lines:
+Add or change:
 
 ```txt
 extraintf=luaintf
 lua-intf=next_in_folder
 ```
+
+Use `next_in_folder`, not `next_in_folder.lua`.
 
 Restart VLC.
 
@@ -69,4 +75,4 @@ Restart VLC.
 
 Double-click any media file.
 
-Done.
+Enjoy.
