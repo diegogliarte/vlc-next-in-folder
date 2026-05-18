@@ -34,6 +34,39 @@ Episode 01.mkv
 Episode 02.mkv
 ```
 
+## Subfolders
+
+Optional with `depth`.
+
+Example:
+
+```txt
+Episode 01.mkv
+Episode 02.mkv
+Episode 03.mkv
+Extras/
+  Extra A.mkv
+  Extra B.mkv
+```
+
+Opening `Episode 02.mkv` with `depth=1` makes:
+
+```txt
+Episode 02.mkv
+Episode 03.mkv
+Extras/Extra A.mkv
+Extras/Extra B.mkv
+Episode 01.mkv
+```
+
+Order:
+
+```txt
+current file -> next files -> subfolders -> previous files
+```
+
+This makes VLC's **Previous** button go to the real previous file.
+
 ## Setup
 
 This is a VLC Lua **interface script**.
@@ -65,6 +98,28 @@ Add or change:
 ```txt
 extraintf=luaintf
 lua-intf=next_in_folder
+```
+
+To enable subfolders, also add:
+
+```txt
+lua-config=next_in_folder={depth=1}
+```
+
+Depth values:
+
+```txt
+0 = current folder only
+1 = direct subfolders
+2 = two folder levels
+```
+
+Full example:
+
+```txt
+extraintf=luaintf
+lua-intf=next_in_folder
+lua-config=next_in_folder={depth=1}
 ```
 
 Use `next_in_folder`, not `next_in_folder.lua`.
