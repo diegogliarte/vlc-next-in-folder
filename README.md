@@ -93,6 +93,17 @@ Linux Flatpak: ~/.var/app/org.videolan.VLC/config/vlc/vlcrc
 macOS:         ~/Library/Preferences/org.videolan.vlc/vlcrc
 ```
 
+In VLC's config file, lines that start with # are comments. VLC ignores them.
+
+For example, this is disabled:
+
+```txt
+#extraintf=
+#lua-intf=
+```
+
+To enable a setting, remove the # at the start of the line and set the value.
+
 Add or change:
 
 ```txt
