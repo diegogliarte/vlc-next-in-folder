@@ -104,6 +104,12 @@ Depth values:
 2 = two folder levels
 ```
 
+Example config:
+
+```txt
+lua-config=next_in_folder={depth=1}
+```
+
 ## Setup
 
 This is a VLC Lua **interface script**.
@@ -130,7 +136,7 @@ Linux Flatpak: ~/.var/app/org.videolan.VLC/config/vlc/vlcrc
 macOS:         ~/Library/Preferences/org.videolan.vlc/vlcrc
 ```
 
-In VLC's config file, lines that start with # are comments. VLC ignores them.
+In VLC's config file, lines that start with `#` are comments. VLC ignores them.
 
 For example, this is disabled:
 
@@ -139,7 +145,7 @@ For example, this is disabled:
 #lua-intf=
 ```
 
-To enable a setting, remove the # at the start of the line and set the value.
+To enable a setting, remove the `#` at the start of the line and set the value.
 
 Add or change:
 
@@ -175,8 +181,6 @@ extraintf=luaintf
 lua-intf=next_in_folder
 lua-config=next_in_folder={depth=1,sort="mtime_desc"}
 ```
-
-Use `next_in_folder`, not `next_in_folder.lua`.
 
 Restart VLC.
 
