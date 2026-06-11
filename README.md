@@ -34,6 +34,43 @@ Episode 01.mkv
 Episode 02.mkv
 ```
 
+Order:
+
+```txt
+current file -> next files -> subfolders -> previous files
+```
+
+This makes VLC's **Previous** button go to the real previous file.
+
+## Sorting
+
+Optional with `sort`.
+
+Default:
+
+```txt
+sort="name"
+```
+
+Sort values:
+
+```txt
+name        = filename, ascending
+name_desc   = filename, descending
+mtime       = modification date, oldest first
+mtime_desc  = modification date, newest first
+size        = file size, smallest first
+size_desc   = file size, largest first
+```
+
+Example:
+
+```txt
+lua-config=next_in_folder={sort="mtime_desc"}
+```
+
+With `mtime` and `size`, files with the same value are ordered like Windows Explorer.
+
 ## Subfolders
 
 Optional with `depth`.
@@ -59,13 +96,13 @@ Extras/Extra B.mkv
 Episode 01.mkv
 ```
 
-Order:
+Depth values:
 
 ```txt
-current file -> next files -> subfolders -> previous files
+0 = current folder only
+1 = direct subfolders
+2 = two folder levels
 ```
-
-This makes VLC's **Previous** button go to the real previous file.
 
 ## Setup
 
@@ -100,18 +137,24 @@ extraintf=luaintf
 lua-intf=next_in_folder
 ```
 
-To enable subfolders, also add:
+Use `next_in_folder`, not `next_in_folder.lua`.
+
+To enable subfolders:
 
 ```txt
 lua-config=next_in_folder={depth=1}
 ```
 
-Depth values:
+To sort by modification date, newest first:
 
 ```txt
-0 = current folder only
-1 = direct subfolders
-2 = two folder levels
+lua-config=next_in_folder={sort="mtime_desc"}
+```
+
+To enable subfolders and sort by modification date, newest first:
+
+```txt
+lua-config=next_in_folder={depth=1,sort="mtime_desc"}
 ```
 
 Full example:
@@ -119,7 +162,7 @@ Full example:
 ```txt
 extraintf=luaintf
 lua-intf=next_in_folder
-lua-config=next_in_folder={depth=1}
+lua-config=next_in_folder={depth=1,sort="mtime_desc"}
 ```
 
 Use `next_in_folder`, not `next_in_folder.lua`.
