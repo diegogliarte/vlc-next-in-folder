@@ -55,7 +55,7 @@ sort="name"
 Sort values:
 
 ```txt
-name        = filename, ascending
+name        = filename, ascending (default)
 name_desc   = filename, descending
 mtime       = modification date, oldest first
 mtime_desc  = modification date, newest first
@@ -68,7 +68,7 @@ size_desc   = file size, largest first
 Example:
 
 ```txt
-lua-config=next_in_folder={sort="ctime_desc"}
+lua-config=next_in_folder={sort="mtime_desc"}
 ```
 
 With `mtime`, `ctime`, and `size`, files with the same value are ordered like Windows Explorer.
