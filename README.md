@@ -59,6 +59,8 @@ name        = filename, ascending
 name_desc   = filename, descending
 mtime       = modification date, oldest first
 mtime_desc  = modification date, newest first
+ctime       = creation date, oldest first
+ctime_desc  = creation date, newest first
 size        = file size, smallest first
 size_desc   = file size, largest first
 ```
@@ -66,10 +68,12 @@ size_desc   = file size, largest first
 Example:
 
 ```txt
-lua-config=next_in_folder={sort="mtime_desc"}
+lua-config=next_in_folder={sort="ctime_desc"}
 ```
 
-With `mtime` and `size`, files with the same value are ordered like Windows Explorer.
+With `mtime`, `ctime`, and `size`, files with the same value are ordered like Windows Explorer.
+
+Creation date availability depends on what VLC and your operating system expose. If creation date is unavailable for some files, those files go after files where creation date is available. If creation date is unavailable for all files, the order falls back to filename order.
 
 ## Subfolders
 
@@ -160,12 +164,6 @@ To sort by modification date, newest first:
 
 ```txt
 lua-config=next_in_folder={sort="mtime_desc"}
-```
-
-To enable subfolders and sort by modification date, newest first:
-
-```txt
-lua-config=next_in_folder={depth=1,sort="mtime_desc"}
 ```
 
 Full example:

@@ -12,11 +12,13 @@
 --   name_desc   natural filename sort, descending
 --   mtime       modification time, oldest first
 --   mtime_desc  modification time, newest first
+--   ctime       creation time, oldest first
+--   ctime_desc  creation time, newest first
 --   size        file size, smallest first
 --   size_desc   file size, largest first
 --
 -- Tie behavior:
---   When mtime or size are equal, names are always sorted ascending.
+--   When mtime, ctime, or size are equal, names are always sorted ascending.
 --   This matches the usual Windows Explorer behavior for equal values.
 
 local CHECK_INTERVAL_US = 1000000 -- 1 second
@@ -31,12 +33,12 @@ if SORT:match("_desc$") then
 	SORT = SORT:gsub("_desc$", "")
 end
 
-if SORT ~= "name" and SORT ~= "mtime" and SORT ~= "size" then
+if SORT ~= "name" and SORT ~= "mtime" and SORT ~= "ctime" and SORT ~= "size" then
 	SORT = "name"
 	SORT_DESC = false
 end
 
-local NEED_STAT = SORT == "mtime" or SORT == "size"
+local NEED_STAT = SORT == "mtime" or SORT == "ctime" or SORT == "size"
 
 local anchor_path = nil
 local queued = {}
@@ -124,8 +126,8 @@ local function compare_number(a, b, field, desc)
 	end
 
 	-- Windows-style tie-breaker:
-	-- if mtime/size is equal, keep name ascending.
-	return compare_name(a, b, not desc)
+	-- if mtime/ctime/size is equal, keep name ascending.
+	return compare_name(a, b, false)
 end
 
 local function sort_items(items)
@@ -237,6 +239,7 @@ local function make_item(dir, name, with_uri)
 		path = path,
 		uri = with_uri and vlc.strings.make_uri(path) or nil,
 		mtime = stat and tonumber(stat.modification_time) or nil,
+		ctime = stat and tonumber(stat.creation_time) or nil,
 		size = stat and tonumber(stat.size) or nil
 	}
 end
@@ -278,10 +281,11 @@ local function list_files(dir)
 		for i, file in ipairs(files) do
 			log(
 				string.format(
-					"%03d | %s | mtime=%s | size=%s",
+					"%03d | %s | mtime=%s | ctime=%s | size=%s",
 					i,
 					file.name,
 					tostring(file.mtime),
+					tostring(file.ctime),
 					tostring(file.size)
 				)
 			)
