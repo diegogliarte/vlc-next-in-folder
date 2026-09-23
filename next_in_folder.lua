@@ -42,6 +42,7 @@ local NEED_STAT = SORT == "mtime" or SORT == "ctime" or SORT == "size"
 
 local anchor_path = nil
 local queued = {}
+local managed_playlist_ids = {}
 local stat_cache = {}
 
 local media_exts = {
@@ -352,7 +353,45 @@ local function add_if_new(items, file)
 	queued[key] = true
 end
 
-local function reset_anchor(path, key)
+local function current_playlist_id()
+	local ok, current_id = pcall(vlc.playlist.current)
+
+	return ok and current_id or nil
+end
+
+-- With an ID, keep only that item. Without one, remember all managed items.
+local function sync_playlist(current_id)
+	local ok, playlist = pcall(vlc.playlist.get)
+
+	if not ok or type(playlist) ~= "table" then
+		return
+	end
+
+	local ids = {}
+
+	local function visit(item)
+		if type(item.children) == "table" then
+			for _, child in ipairs(item.children) do
+				visit(child)
+			end
+		elseif item.id then
+			if current_id and item.id ~= current_id then
+				pcall(vlc.playlist.delete, item.id)
+			else
+				ids[item.id] = true
+			end
+		end
+	end
+
+	visit(playlist)
+	managed_playlist_ids = ids
+end
+
+local function reset_anchor(path, key, current_id)
+	if current_id then
+		sync_playlist(current_id)
+	end
+
 	anchor_path = path
 	queued = {}
 	stat_cache = {}
@@ -371,9 +410,11 @@ local function queue_folder()
 	end
 
 	local key = normalize(path)
+	local current_id = current_playlist_id()
+	local is_new_item = current_id ~= nil and not managed_playlist_ids[current_id]
 
-	if not anchor_path or not queued[key] then
-		reset_anchor(path, key)
+	if not anchor_path or is_new_item or (current_id == nil and not queued[key]) then
+		reset_anchor(path, key, current_id)
 	end
 
 	local anchor_dir = split_dir(anchor_path)
@@ -413,6 +454,7 @@ local function queue_folder()
 
 	if #items > 0 then
 		vlc.playlist.enqueue(items)
+		sync_playlist()
 		log("queued " .. #items .. " item(s)")
 	end
 end
